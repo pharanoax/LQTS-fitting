@@ -4,18 +4,18 @@ clear;
 clc;
 close;
 
-% Load in experimental data
+% Load in experimental data (You can change the filename here)
 [d,si] = abfload('C_0003.abf');
 
 % Select one action potential
-t = (0:0.05:1500);
-AP = d(1:length(t));
+[AP_start, AP_end] = single_AP(d);
+AP = d(AP_start:AP_end);
 
     % Plot action potential
-    plot(t,AP);
+    plot(((0:length(AP)-1)*si*10^(-3)),AP);
 
 % Initialise
-[V,b_V,p_V,APD,upstroke_V,upstroke_t] = initialise(d(1:30001),si);
+[V,b_V,p_V,APD,max_upstroke,upstroke_V,upstroke_t] = initialise(AP,si);
 
     % Identify maximum upstroke
     hold on
