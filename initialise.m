@@ -42,7 +42,7 @@ i = upstroke_i;
 
 while upstroke_count <1
     if i > p_i
-        if (V(i) < (upstroke_V + 0.0005)) && (V(i) > (upstroke_V - 0.0005))
+        if (V(i) < (upstroke_V + 1)) && (V(i) > (upstroke_V - 1))
             upstroke_count = 1;
         end
     end
