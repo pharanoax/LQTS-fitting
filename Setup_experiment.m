@@ -5,7 +5,7 @@ clc;
 close;
 
 % Load in experimental data (You can change the filename here)
-[d,si] = abfload('Data.abf');
+[d,si] = abfload('C_0009.abf');
 d = d(1:48:end);
 % Select one action potential
 [AP_start, AP_end] = single_AP(d,si);
