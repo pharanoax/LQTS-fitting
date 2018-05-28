@@ -1,4 +1,4 @@
-function [AP_start, AP_end] = single_AP(V,si)
+function [AP_start, AP_end] = single_AP(V)
 
 % This function will take in an array of voltages representing a sequence
 % of membrane potentials and isolate a single action potential
@@ -13,13 +13,6 @@ function [AP_start, AP_end] = single_AP(V,si)
 %
 % NAME          TYPE, DEFAULT      DESCRIPTION
 % AP            scalar array       membrane voltage of a single AP
-
-% Assuming that the maximum heart rate that can occur in an iPSC cell is
-% 100 bpm, this would mean that at least 600 ms has to pass before another
-% baseline is reached.
-
-si = si*10^(-3);
-min_separation = 600/si;
 
 % Identify the maximum voltage achieved in the patch clamp recording
 max_voltage = max(V);
