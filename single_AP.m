@@ -7,7 +7,6 @@ function [AP_start, AP_end] = single_AP(V)
 %
 % NAME          TYPE, DEFAULT      DESCRIPTION
 % V             scalar array       membrane voltage
-% si            scalar             sampling rate (us)
 % 
 %                    >>> OUTPUT VARIABLES >>>
 %
