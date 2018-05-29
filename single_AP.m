@@ -33,6 +33,7 @@ threshold = 0.9*max_voltage;
 AP_start = AP_start + upstroke_idx(1);
 AP_end = AP_end + upstroke_idx(2);
 
+% Out
 
 
 

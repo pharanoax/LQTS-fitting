@@ -1,0 +1,80 @@
+function [V,b_V,p_V,APD,max_upstroke,upstroke_V,upstroke_i,V_90_i] = initialise(V,t)
+
+% This function will take in an array of voltages representing membrane
+% potential and then output some constants to set as parameter defaults in
+% the model to be fitted
+%
+%                    >>> INPUT VARIABLES >>>
+%
+% NAME          TYPE, DEFAULT      DESCRIPTION
+% V             scalar array       membrane voltage
+% t             scalar array       time points for each voltage point
+% 
+%                    >>> OUTPUT VARIABLES >>>
+%
+% NAME          TYPE, DEFAULT      DESCRIPTION
+% V             scalar array       action potential voltages
+% b_V           scalar             baseline potential voltage
+% p_V           scalar             peak volage
+% APD           scalar             action potential duration at 90%
+% max_upstroke  scalar             maximum rate of upstroke
+% upstroke_V    scalar             membrane voltage at maximum upstroke
+% upstroke_i    scalar             index when maximum upstroke occurs
+% V90_i         scalar             indices at which 10% of max voltage
+% occurs
+
+
+% Finding baseline voltage and peak voltage
+[b_V, ~] = min(V);
+[p_V, p_i] = max(V);
+
+% Determine APD
+
+% First determine the first derivative
+diff_1 = diff(V);
+[max_upstroke, upstroke_i] = max(diff_1);
+upstroke_V = V(upstroke_i);
+
+% % Find the next time point where membrane potential returns to upstroke_V
+% upstroke_count = 0;
+% i = upstroke_i;
+% 
+% while upstroke_count <1
+%     if i > p_i
+%         if (V(i) < (upstroke_V + 1)) && (V(i) > (upstroke_V - 1))
+%             upstroke_count = 1;
+%         end
+%     end
+%     i = i+1;
+% end
+% 
+% %
+
+V_90 = (p_V - b_V)*0.1;
+V_90_i = [0,0];
+V_90_count = 0;
+i = 1;
+
+% Increase the resolution of the AP by a factor of 50
+vq = interp1(t,V,linspace(t(1),t(end),length(t)*50));
+
+while V_90_count < 2
+    if V_90_count == 0
+        if (vq(i) < (V_90 + 1)) && (vq(i) > (V_90 - 1))
+            V_90_count = 1;
+            V_90_i(1) = i;
+        end
+    end
+    if i > p_i
+        if (vq(i) < (V_90 + 1)) && (vq(i) > (V_90 - 1))
+            V_90_count = 2;
+            V_90_i(2) = i;
+        end
+    end
+    i = i+1;
+end
+
+% Calculate time of maximum upstroke and the APD
+APD = vq(V_90_i(2)) - t(V_90_i(1));
+
+end
