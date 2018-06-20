@@ -17,7 +17,7 @@ function [AP_start, AP_end] = single_AP(V)
 max_voltage = max(V);
 
 % Determine a threshold based off the max voltage
-threshold = 0.9*max_voltage;
+threshold = 0.8*max_voltage;
 
 % Find all the local maxima that pass the threshold and occurs outside the
 % minimum separation from the previous peak voltage.
