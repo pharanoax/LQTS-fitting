@@ -1,4 +1,4 @@
-function [V,b_V,p_V,APD,max_upstroke,upstroke_V,upstroke_i,V90,V_90_t] = initialise(V,t)
+function [b_V,p_V,APD,max_upstroke,upstroke_V,upstroke_i,V90,V_90_t] = initialise(V,t)
 
 % This function will take in an array of voltages representing membrane
 % potential and then output some constants to set as parameter defaults in
@@ -13,7 +13,6 @@ function [V,b_V,p_V,APD,max_upstroke,upstroke_V,upstroke_i,V90,V_90_t] = initial
 %                    >>> OUTPUT VARIABLES >>>
 %
 % NAME          TYPE, DEFAULT      DESCRIPTION
-% V             scalar array       action potential voltages
 % b_V           scalar             baseline potential voltage
 % p_V           scalar             peak volage
 % APD           scalar             action potential duration at 90%
