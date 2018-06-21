@@ -18,13 +18,13 @@ iPSC_AP = V_iPSC(iPSC_start:iPSC_end);
 iPSC_t = iPSC_t(iPSC_start:iPSC_end)-iPSC_t(iPSC_start);
     
 % Initialise parameters for iPSC-CM
-[V_iPSC,iPSC_baseline,iPSC_peak,iPSC_APD,iPSC_max_upstroke,iPSC_upstroke_V,iPSC_upstroke_i,iPSC_V90,iPSC_V90_t] = initialise(iPSC_AP,iPSC_t);
+[iPSC_baseline,iPSC_peak,iPSC_APD,iPSC_max_upstroke,iPSC_upstroke_V,iPSC_upstroke_i,iPSC_V90,iPSC_V90_t] = initialise(iPSC_AP,iPSC_t);
 iPSC_upstroke_t = iPSC_upstroke_i*si*10^(-3);
     
 %% Setting up for the Paci model
 
 % Load up the Paci model
-[VOI, STATES, ALGEBRAIC, CONSTANTS] = Paci();
+[VOI, STATES, ~, ~] = Paci();
 Paci_V = STATES(:,1)*1000;  % Scale from V to mV
 Paci_t = VOI;
 
