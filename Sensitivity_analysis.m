@@ -61,7 +61,7 @@ for i = 1:12
         scaling_factors(i) = scalings(j);
         
         % Run the Paci model with scaled parameter
-        [VOI, STATES, ALGEBRAIC, CONSTANTS] = Paci_Sensitivity_Analysis(scaling_factors);        
+        [VOI, STATES, ~, ~] = Paci_Sensitivity_Analysis(scaling_factors);        
         Paci_V = STATES(:,1)*1000;  
         Paci_t = VOI;
         
@@ -71,7 +71,7 @@ for i = 1:12
         Paci_t = (Paci_t(Paci_start:Paci_end)-Paci_t(Paci_start))*1000; 
 
         % Find the parameters of interest
-        [~, ~, ~, APD(j), ~, ~, ~,~,~] = initialise(Paci_AP,Paci_t);       
+        [~, ~, APD(j), ~, ~, ~,~,~] = initialise(Paci_AP,Paci_t);       
     end
 
     figure(1)
