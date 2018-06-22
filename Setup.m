@@ -35,7 +35,7 @@ Paci_AP = Paci_V(Paci_start:Paci_end);
 Paci_t = (Paci_t(Paci_start:Paci_end)-Paci_t(Paci_start))*1000;  % Scale from s to ms and recalibrate back to Paci_t(0)=0
 
 % Initialise parameters for Paci model
-[V_Paci, Paci_baseline, Paci_peak, Paci_APD, Paci_max_upstroke, Paci_upstroke_V, Paci_upstroke_i,Paci_V90,Paci_V90_t] = initialise(Paci_AP,Paci_t);
+[Paci_baseline, Paci_peak, Paci_APD, Paci_max_upstroke, Paci_upstroke_V, Paci_upstroke_i,Paci_V90,Paci_V90_t] = initialise(Paci_AP,Paci_t);
 Paci_upstroke_t = Paci_t(Paci_upstroke_i);
 
 %% Plot the intial action potentials
