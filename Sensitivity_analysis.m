@@ -23,6 +23,17 @@
 %   11  P_NaK    NaK maximal conductance
 %   12  k_NaCa   NaCa maximal conductance
 %
+% Further parameters were explored governing sodium dynamics
+%
+%   #  Parameter    Name in Paci Model
+%   -----------------------------------------------------------------------
+%   13   G_Na       Na maximal conductance
+%   14   T_h        Time constant in sodium current h gate
+%   15   T_j        Time constant in sodium current j gate
+%   16   T_m        Time constant in sodium current m gate
+%   17   G_f        Funny current maximal conductance
+%   18   T_Xf       Time constant in funny current Xf gate
+%
 % Author: Eric Liu
 
 close all;
@@ -53,7 +64,7 @@ default = 1;
 parameter_labels = ["G_{cal}","T_d","T_{f1}","T_{f2}","G_{Kr}","T_{Xr1}","T_{Xr2}","G_{Ks}","T_{Xs}","G_{K1}","G_{NaK}","k_{NaCa}"];
 
 for i = 1:12
-    scaling_factors = ones(1,12);
+    scaling_factors = ones(1,18);
     APD = zeros(1,5);
     
     for j = 1:5
@@ -76,33 +87,67 @@ for i = 1:12
 
     figure(1)
     
-%     subplot(2,2,1);
-%     plot(scalings*100,baseline);
-%     title(['Changes in resting membrane potential vs Changes in ',parameter_labels(i)]);
-%     xlabel("Scaling factor (%)");
-%     ylabel("Resting membrane potential (mV)");
-%         
-%     subplot(2,2,2);
-%     plot(scalings*100,peak);
-%     title(['Changes in peak membrane potential vs Changes in ',parameter_labels(i)]);
-%     xlabel("Scaling factor (%)");
-%     ylabel("Peak membrane potential (mV)");
-%     
-%     subplot(2,2,3);
     subplot(3,4,i)
     plot(scalings*100,APD*100/582);
     title(['\DeltaAPD vs \Delta' + parameter_labels(i)]);
     ylim([80,120]);
     xlabel("Scaling factor (%)");
     ylabel("\DeltaAPD (%)");
-%     
-%     subplot(2,2,4);
-%     plot(scalings*100,max_upstroke);
-%     title(['Changes in maximum upstroke rate vs Changes in ',parameter_labels(i)]);
-%     xlabel("Scaling factor (%)");
-%     ylabel("Maximum upstroke rate (mV/ms)");
+  
+end
+
+%% Repeating the procedure for iNa and if
+% Locations of each parameter in the Paci model
+%
+%   #    Parameter   Location in Paci Model
+%   -----------------------------------------------------------------------
+%   13   G_Na        CONSTANTS(:,29)
+%   14   T_h         ALGEBRAIC(:,42)
+%   15   T_j         ALGEBRAIC(:,43)         
+%   16   T_m         ALGEBRAIC(:,41)
+%   17   G_f         CONSTANTS(:,37)
+%   18   T_Xf        ALGEBRAIC(:,27)
+
+parameter_labels = ["G_{Na}","T_h","T_{j}","T_{m}","G_{f}","T_{Xf}"];
+
+for i = 13:18
+    scaling_factors = ones(1,18);
+    V90_t = zeros(2,5);
+    
+    for j = 1:5
+        % Set the scaling for the current parameter
+        scaling_factors(i) = scalings(j);
+        
+        % Run the Paci model with scaled parameter
+        [VOI, STATES, ~, ~] = Paci_Sensitivity_Analysis(scaling_factors);        
+        Paci_V = STATES(:,1)*1000;  
+        Paci_t = VOI;
+        
+        % Select one action potential
+        [Paci_start, Paci_end] = single_AP(Paci_V);
+        Paci_AP = Paci_V(Paci_start:Paci_end);
+        Paci_t = (Paci_t(Paci_start:Paci_end)-Paci_t(Paci_start))*1000; 
+
+        % Find the parameters of interest
+        [~, ~, ~, ~, ~, ~,~,V90_t(:,j)] = initialise(Paci_AP,Paci_t);       
+    end
+
+    figure(2)
+    
+    subplot(2,3,i-12)
+    plot(scalings*100,V90_t(1,:)*100/V90_t(1,3));
+    %plot([70 85 100 115 130],[100 100 100 100 100]);
+    title(['\DeltaV90_t vs \Delta' + parameter_labels(i-12)]);
+    ylim([80,120]);
+    xlabel("Scaling factor (%)");
+    ylabel("\DeltaV90_t (%)");
+    
+    hold on
+
+
    
 end
+
 
 
 
