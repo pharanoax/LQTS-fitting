@@ -112,7 +112,7 @@ parameter_labels = ["G_{Na}","T_h","T_{j}","T_{m}","G_{f}","T_{Xf}"];
 
 for i = 13:18
     scaling_factors = ones(1,18);
-    V90_t = zeros(2,5);
+    V90_t = zeros(1,5);
     
     for j = 1:5
         % Set the scaling for the current parameter
@@ -135,7 +135,7 @@ for i = 13:18
     figure(2)
     
     subplot(2,3,i-12)
-    plot(scalings*100,V90_t(1,:)*100/V90_t(1,3));
+    plot(scalings*100,V90_t*100/V90_t(3));
     %plot([70 85 100 115 130],[100 100 100 100 100]);
     title(['\DeltaV90_t vs \Delta' + parameter_labels(i-12)]);
     ylim([80,120]);

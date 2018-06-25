@@ -48,4 +48,5 @@ V_90_t = t(V_90_i);                         % Convert to time
 
 APD = V_90_t(2) - V_90_t(1);                % Calculate APD
 
+V_90_t = V_90_t(1);                         % Select the first time of occurrence
 end
