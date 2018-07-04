@@ -1,4 +1,4 @@
-function APD = APD90(V,t,b_V,p_V,p_i)
+function APD90 = APD(V,t,b_V,p_V,p_i)
 
 % This function will take in an array of voltages representing a sequence
 % of membrane potentials and apply a low pass filter
@@ -30,7 +30,7 @@ x2 = t(p_i:length(V));
 AP_end = interp1(y2,x2(index2),limit,'spline');
 
 % Calculating the APD90
-APD = AP_end - AP_start;
+APD90 = AP_end - AP_start;
 
 % Plotting the start and end of the APD90
     hold on
