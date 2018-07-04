@@ -27,11 +27,11 @@ mins=-mins;
 pks_time = t(locs_pks);
 
 % Plot the mins and peaks on the plot of the action potential
-figure
-plot(t,V);
-hold on
-plot(mins_time,mins,'o');
-plot(pks_time,pks,'o');
+% figure
+% plot(t,V);
+% hold on
+% plot(mins_time,mins,'o');
+% plot(pks_time,pks,'o');
 
 % Isolate the final two action potentials of the data two compare
 APend = length(mins);
@@ -41,7 +41,7 @@ FinalAP_t = t(locs_mins(APend-1):locs_mins(APend));
 SemiFinalAP_V = V(locs_mins(APend-2):locs_mins(APend-1));
 SemiFinalAP_t = t(locs_mins(APend-2):locs_mins(APend-1));
 % Indicate the final two action potentials on the plot
-plot(FinalAP_t,FinalAP_V,SemiFinalAP_t,SemiFinalAP_V)
+% plot(FinalAP_t,FinalAP_V,SemiFinalAP_t,SemiFinalAP_V)
 
 % Determine the upstroke
 [FinalAP_max_upstroke, FinalAP_max_upstroke_i] = max(diff(FinalAP_V));

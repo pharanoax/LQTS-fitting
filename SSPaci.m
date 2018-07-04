@@ -17,11 +17,11 @@ function [ Paci_pk, Paci_min, Paci_APD90, Paci_upstroke_rate, Paci_upstroke_V, P
 
 % Determine how many seconds the model needs to run for to achieve steady
 % state
-SStime = SteadyState( 50 ); % the initial guess is 50seconds
+SStime = SteadyState( 20 ); % the initial guess is 20 seconds
 
 % Run the Paci model till steady state
-[VOI, STATES, ALGEBRAIC, CONSTANTS] = Paci_SS(SStime); % VOI is in seconds
-STATES(:,1) = STATES(:,1)*1000; % Change volts to milivolts
+[VOI, STATES, ~, ~] = Paci_SS(SStime); % VOI is in seconds
+STATES(:,1) = STATES(:,1)*1000; % Change volts to milivolts for membrane voltage
 
 % Obtain parameters from the steady state action potential of the Paci Model
 [ Paci_pk, Paci_min, Paci_APD90, Paci_upstroke_rate, Paci_upstroke_V, ...

@@ -22,7 +22,7 @@ t2 = 100;
 
 while t0 ~= t1
     % Run the model for the current guess of the length of time
-    [VOI, STATES, ALGEBRAIC, CONSTANTS] = Paci_SS(t1);
+    [VOI, STATES, ~, ~] = Paci_SS(t1);
      % Determine if SS has been achieved
     [ SS ] = IsSteadyState( STATES(:,1),VOI);
     

@@ -20,12 +20,6 @@ function [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel(time)
     [INIT_STATES, CONSTANTS] = initConsts;
 
     % Set timespan to solve over
-    %i=50; % Modifying i gives you the number of action potentials to plot
-    %tspan = [0, i*1.6462]; % 1.6462s is the duration of 1 action potential
-    %tspan = linspace(0,i*(1*100/CONSTANTS(:,6)),10000*i);
-    %tspan = linspace(0,i*1.3,10000*i);
-%     time = 2;
-%     tspan = linspace(0,time,time*10000);
     tspan = [0,time];
     % Set numerical accuracy options for ODE solver
     options = odeset('RelTol', 1e-06, 'AbsTol', 1e-06, 'MaxStep', 1);
@@ -38,12 +32,12 @@ function [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel(time)
     ALGEBRAIC = computeAlgebraic(ALGEBRAIC, CONSTANTS, STATES, VOI);
 
     % Plot state variables against variable of integration
-    [LEGEND_STATES, LEGEND_ALGEBRAIC, LEGEND_VOI, LEGEND_CONSTANTS] = createLegends();
-    figure();
-    plot(VOI, STATES);
-    xlabel(LEGEND_VOI);
-    l = legend(LEGEND_STATES);
-    set(l,'Interpreter','none');
+%     [LEGEND_STATES, LEGEND_ALGEBRAIC, LEGEND_VOI, LEGEND_CONSTANTS] = createLegends();
+%     figure();
+%     plot(VOI, STATES);
+%     xlabel(LEGEND_VOI);
+%     l = legend(LEGEND_STATES);
+%     set(l,'Interpreter','none');
 end
 
 function [LEGEND_STATES, LEGEND_ALGEBRAIC, LEGEND_VOI, LEGEND_CONSTANTS] = createLegends()

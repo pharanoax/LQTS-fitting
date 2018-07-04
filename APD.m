@@ -33,9 +33,9 @@ AP_end = interp1(y2,x2(index2),limit,'spline');
 APD90 = AP_end - AP_start;
 
 % Plotting the start and end of the APD90
-    hold on
-    plot(AP_start,limit,'-o');
-    plot(AP_end,limit,'-o');
+%     hold on
+%     plot(AP_start,limit,'-o');
+%     plot(AP_end,limit,'-o');
     
 
 
