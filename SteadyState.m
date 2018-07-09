@@ -1,4 +1,4 @@
-function [ SStime ] = SteadyState( t1 )
+function [SS_VOI, SS_STATES] = SteadyState( t1 )
 
 % This function finds the time that the paci model needs to be run for to
 % achieve steady state
@@ -11,31 +11,22 @@ function [ SStime ] = SteadyState( t1 )
 %                    >>> OUTPUT VARIABLES >>>
 %
 % NAME          TYPE, DEFAULT      DESCRIPTION
-% SStime        scalar             The time required for the model to reach
-%                                   steady state
+% SS_VOI        scalar array       VOI till steady state is reached
+% SS_STATES     scalar array       STATES till steady state is reached
 
 
-% Boundaries for where the limit of how long is required to reach steady
-% state lies between
-t0 = 0;
-t2 = 100;
-
-while t0 ~= t1
+SStime = t1;
+SS = 0;
+while ~SS % While steady state has not been reached
     % Run the model for the current guess of the length of time
-    [VOI, STATES, ~, ~] = Paci_SS(t1);
+    [SS_VOI, SS_STATES, ~, ~] = Paci_SS(SStime);
      % Determine if SS has been achieved
-    [ SS ] = IsSteadyState( STATES(:,1),VOI);
-    
-    % Update boundaries depending on whether steady state has been achieved
-    if SS
-        t2 = t1;
-        t1 = t0 + floor((t2-t0)/2);
-    else
-        t0 =t1;
-        t1 = t1 + floor((t2-t0)/2);   
-    end
+    [ SS ] = IsSteadyState( SS_STATES(:,1),SS_VOI);
+    % Increase the time to run for by t1
+    SStime = SStime+t1;
+
 end
 
-SStime = t2; % Time for steady state (seconds)
+
 end
 

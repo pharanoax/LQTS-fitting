@@ -1,8 +1,7 @@
 function [ Paci_pk, Paci_min, Paci_APD90, Paci_upstroke_rate, Paci_upstroke_V, Paci_upstroke_t ] = SSPaci(  )
 
 % This function identifies the parameters required for the objective function
-% from a steady state action potential, after the time for steady state has
-% been determined
+% from a steady state action potential
 
 %                    >>> OUTPUT VARIABLES >>>
 %
@@ -15,16 +14,14 @@ function [ Paci_pk, Paci_min, Paci_APD90, Paci_upstroke_rate, Paci_upstroke_V, P
 % Paci_upstroke_t       scalar             time from first minimum when maximum upstroke occurs
 
 
-% Determine how many seconds the model needs to run for to achieve steady
-% state
-SStime = SteadyState( 20 ); % the initial guess is 20 seconds
+% Run the model till steady state has been reached
+[SS_VOI, SS_STATES] = SteadyState( 50 ); % the initial guess is 50 seconds
 
 % Run the Paci model till steady state
-[VOI, STATES, ~, ~] = Paci_SS(SStime); % VOI is in seconds
-STATES(:,1) = STATES(:,1)*1000; % Change volts to milivolts for membrane voltage
+SS_STATES(:,1) = SS_STATES(:,1)*1000; % Change volts to milivolts for membrane voltage
 
 % Obtain parameters from the steady state action potential of the Paci Model
 [ Paci_pk, Paci_min, Paci_APD90, Paci_upstroke_rate, Paci_upstroke_V, ...
-    Paci_upstroke_t ] = Paci_Parameters( VOI, STATES(:,1) );
+    Paci_upstroke_t ] = Paci_Parameters( SS_VOI, SS_STATES(:,1) );
 end
 
