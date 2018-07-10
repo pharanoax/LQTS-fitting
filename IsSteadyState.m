@@ -56,8 +56,8 @@ Diff(1) = (mins(length(mins))-mins(length(mins)-1)); % minimun
 Diff(2) = (pks(length(pks))-pks(length(pks)-1)); % peak
 Diff(3) = (FinalAP_t(length(FinalAP_t)) - (FinalAP_t(1))) - ...
     (SemiFinalAP_t(length(SemiFinalAP_t)) - (SemiFinalAP_t(1))); % APD
-Diff(4) = FinalAP_max_upstroke - SemiFinalAP_max_upstroke; % max Upstroke
-Diff(5) = (FinalAP_t(FinalAP_max_upstroke_i) - FinalAP_t(1)) - ...
+% Diff(4) = FinalAP_max_upstroke - SemiFinalAP_max_upstroke; % max Upstroke
+Diff(4) = (FinalAP_t(FinalAP_max_upstroke_i) - FinalAP_t(1)) - ...
     (SemiFinalAP_t(SemiFinalAP_max_upstroke_i) - SemiFinalAP_t(1));
     % Time till max upstroke from the start of the action potential
 

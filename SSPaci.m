@@ -15,7 +15,7 @@ function [ Paci_pk, Paci_min, Paci_APD90, Paci_upstroke_rate, Paci_upstroke_V, P
 
 
 % Run the model till steady state has been reached
-[SS_VOI, SS_STATES] = SteadyState( 50 ); % the initial guess is 50 seconds
+[SS_VOI, SS_STATES] = SteadyState( 200 ); % the initial guess is 200 seconds
 
 % Run the Paci model till steady state
 SS_STATES(:,1) = SS_STATES(:,1)*1000; % Change volts to milivolts for membrane voltage

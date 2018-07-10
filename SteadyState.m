@@ -26,7 +26,7 @@ while ~SS % While steady state has not been reached
     SStime = SStime+t1;
 
 end
-
+SStime = SStime - t1 % Display the time it took to reach steady state
 
 end
 
