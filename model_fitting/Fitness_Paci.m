@@ -34,29 +34,44 @@ function fitness = Fitness_Paci(scaling_factors)
 %   2   peak             peak voltage
 %   3   APD90            action potential duration at 90% repolarization
 %   4   max_upstroke     maximum upstroke rate
-%   5   upstroke_t       time of maximum upstroke from start of AP
+%   5   upstroke_t       time of maximum upstroke from start of AP (divided
+%                        by 10)
 
-expt_param = [-68.1237, 39.4592, 307.2, 12.2197, -13.74609];
+expt_param = [-68.1237, 39.4592, 213.6, 304.8];
 
 % Run the Paci model with a set of the specified conductance scalings
 [VOI, STATES, ~, ~] = Paci_mod(scaling_factors);        
 Paci_V = STATES(:,1)*1000;  
 
  % Select one action potential
+try 
 [Paci_start, Paci_end] = single_AP(STATES(:,1)*1000,0);
 Paci_AP = Paci_V(Paci_start:Paci_end);
 Paci_t = (VOI(Paci_start:Paci_end)-VOI(Paci_start))*1000; 
 
 % Find the parameters of interest
-model_param = zeros(1,5);
-[model_param(1),model_param(2),model_param(3),model_param(4),~,~,~,model_param(5)] = initialise(Paci_AP,Paci_t);
-model_param(5) = model_param(5)/10;
+model_param = zeros(1,4);
+[model_param(1),model_param(2),model_param(3),~,~,~,~,model_param(4)] = initialise(Paci_AP,Paci_t);
 
 % Assess fitness
 
-fitness = (sum(expt_param - model_param).^2)^0.5;
+fitness = (sum(((expt_param - model_param)./expt_param).^2))^0.5;
 display(fitness);
 display(scaling_factors)
+
+catch
+    fitness = 1000;
+end
+
+display(fitness);
+display(scaling_factors)
+
+% Write to text file
+
+fileid = fopen('fitness.txt','a');
+fprintf(fileid, '\n Fitness = %f \t scaling factors = %f %f %f %f %f %f %f %f', fitness, scaling_factors);
+fclose(fileid);
+
 
 
 
