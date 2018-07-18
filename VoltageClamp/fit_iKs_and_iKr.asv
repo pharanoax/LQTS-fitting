@@ -1,0 +1,125 @@
+% This script will take voltage clamp data to find the maximal conductances
+% for iKs and iKr in the Paci model.
+
+% Author: Eric Liu
+% Date :  13/07/18
+
+close all
+clear
+
+%% Fit scalings for iKs and iKr conductances
+% Apply particle swarm to find optimal gKs to fit voltage clamp current
+% density data.
+options = optimoptions(@particleswarm,'PlotFcns',@pswplotbestf);
+LB = 10;
+UB = 300;
+[gKs,gKs_fitness] = particleswarm(@iKs_fitness,1,LB,UB,options);
+
+% Apply particle swarm to find optimal gKs to fit voltage clamp current
+% density data.
+options = optimoptions(@particleswarm,'PlotFcns',@pswplotbestf);
+LB = 0.5;
+UB = 100;
+[gKr,gKr_fitness] = particleswarm(@iKr_fitness,1,LB,UB,options);
+
+%% Compare fitted iKs values with data
+
+% Voltage clamps
+voltage_clamps = -50:10:60;
+
+% Experimental data
+data_iKs =[ 0.4190, ...     % -50mV
+            0.4354, ...     % -40mV
+            1.2245, ...     % -30mV
+            2.5729, ...     % -20mV
+            4.0918, ...     % -10mV
+            4.5215, ...     %   0mV
+            5.1320, ...     % +10mV
+            5.0798, ...     % +20mV
+            5.4478, ...     % +30mV 
+            6.2990, ...     % +40mV
+            7.0898, ...     % +50mV
+            6.5984];        % +60mV
+        
+% Error
+error_iKs = [0.61893, 0.8136, 1.9163, 2.0709, 2.4471, 2.8495, 3.4983, 3.6606, 4.4378, 5.9775, 6.7960, 6.4274];
+
+% Respective model data using optimised scaling
+i = 1;
+model_iKs = zeros(1,12);
+    
+for Vclamp = -0.05:0.01:0.06
+    
+    % Run the Paci model under the current voltage clamp
+    [VOI, ~, ALGEBRAIC, ~] = Paci_VoltageClamp(Vclamp,[28.87,1]);
+    
+    % Identify the index at which the clamp has been running for 4 seconds
+    % i.e. t = 6s (since the model runs for 2 seconds before clamping)
+    [~,i_6s] = min(abs(6-VOI));
+    
+    % Identify the iKs amplitude at t = 6s
+    model_iKs(i) = ALGEBRAIC(i_6s,55);   
+    
+    i = i + 1;
+end
+
+plot(voltage_clamps,model_iKs,'o');
+hold on
+errorbar(voltage_clamps,data_iKs,error_iKs,'x');
+title('iKs IV curve comparison between Paci model and experimental data')
+xlabel('Voltage (V)')
+ylabel('Current density (A/F)')
+legend('Paci model','Experimental data','location','northwest')
+
+%% 
+% Voltage clamps
+voltage_clamps = -70:10:70;
+
+% Experimental data
+data_iKr =[ -0.8369,  ...    % -70mV
+            -0.0187,  ...    % -60mV
+             0.6155,  ...    % -50mV
+             1.1168,  ...    % -40mV
+             1.7450   ...    % -30mV             
+             2.6301,  ...    % -20mV
+             3.7660,  ...    % -10mV
+             4.6810,  ...    %   0mV
+             6.1103,  ...    % +10mV
+             6.8733,  ...    % +20mV
+             7.6432,  ...    % +30mV
+             8.7075,  ...    % +40mV 
+             10.1791, ...    % +50mV
+             10.8078, ...    % +60mV
+             10.7685];       % +70mV
+        
+% Error
+error_iKr = [1.0596, 0.2667, 0.8319, 1.598, 2.7210, 3.5491, 4.2229, ...
+                5.1154, 7.0834, 7.7849, 8.7384, 9.8113, 10.4650, 11.2476, 10.4122];
+
+% Respective model data using optimised scaling
+i = 1;
+model_iKr = zeros(1,12);
+    
+for Vclamp = -0.07:0.01:0.07
+    
+    % Run the Paci model under the current voltage clamp
+    [VOI, ~, ALGEBRAIC, ~] = Paci_VoltageClamp(Vclamp,[28.87,1]);
+    
+    % Identify the index at which the clamp has been running for 4 seconds
+    % i.e. t = 6s (since the model runs for 2 seconds before clamping)
+    [~,i_6s] = min(abs(6-VOI));
+    
+    % Identify the iKs amplitude at t = 6s
+    model_iKr(i) = ALGEBRAIC(i_6s,55);   
+    
+    i = i + 1;
+end
+
+figure
+plot(voltage_clamps,model_iKr,'o');
+hold on
+errorbar(voltage_clamps,data_iKr,error_iKr,'x');
+title('iKr IV curve comparison between Paci model and experimental data')
+xlabel('Voltage (V)')
+ylabel('Current density (A/F)')
+legend('Paci model','Experimental data','location','northwest')
