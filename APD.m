@@ -16,7 +16,7 @@ function APD90 = APD(V,t,b_V,p_V,p_i)
 
 % Calculating the voltage that achieves APD90
 Amplitude = p_V-b_V;
-limit = b_V+0.1*Amplitude;
+limit = b_V+0.5*Amplitude;
 
 % Interpolating to find the start and end of the APD90
 y1 = (V(1:p_i));
