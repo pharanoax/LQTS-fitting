@@ -35,7 +35,7 @@ try
 [~,AP_start] = min(V(upstroke_idx(1):upstroke_idx(2)));
 [~,AP_end] = min(V(upstroke_idx(2):upstroke_idx(3)));
 catch
-    disp('Error: Consecutive upstroke indices were not found');
+%     disp('Error: Consecutive upstroke indices were not found');
 end
 
 AP_start = AP_start + upstroke_idx(1);

@@ -44,11 +44,14 @@ fclose(fileid);
 
 user = input('Have iKs and iKr been fitted already (Y/N)?','s');
 
-if user == 'Y'
+if user == 'Y' || 'y'
     iKs_solution = [53.9505, 3.103];
     iKr_solution = [27.2299, 4.0188, 9.2981];
+    
+    iKs_feval = 3.0289;
+    iKr_feval = 7.9155;
 
-elseif user == 'N'     
+elseif user == 'N' || 'n'     
 %% Stage 1: Fit to current density data
 
 % Step 1: Find optimal scaling factors for iKs maximal conductance and time
@@ -94,7 +97,7 @@ iKs_UB = [100 100];
 
 % Run the particle swarm. Each iteration of the particle swarm will be
 % noted down in fitness.txt
-disp('Optimising for iKs model parameters...');
+fprintf('Optimising for iKs model parameters...');
 [iKs_solution,iKs_feval] = particleswarm(iKs_fitness,2,iKs_LB,iKs_UB,options);
 
 % -------------------------------------------------------------------------
@@ -144,17 +147,17 @@ iKr_UB = [100 100 100];
 
 % Run the particle swarm. Each iteration of the particle swarm will be
 % noted down in fitness.txt
-disp('Optimising for iKs model parameters... \n');
+fprintf('Optimising for iKs model parameters... \n');
 iKs_fitness = @(iKr_scaling_factors) iKr_setup(iKr_scaling_factors,iKr_data);
 [iKr_solution,iKr_feval] = particleswarm(@iKr_fitness,3,iKr_LB,iKr_UB,options);
 end
 
-disp('\n iKs and iKr model parameters have been scaled: \n');
-disp('\t gKs     tauKs   gKr     tauXr1  tauXr2   \n');
-disp('\t %f      %f      %f      %f      %f', iKs_solution(1), iKs_solution(2), iKr_solution(1), iKr_solution(2), iKr_solution(3));
-disp('\n');
-disp('iKs fitness = %f \n', iKs_feval);
-disp('iKr fitness = %f \n \n', iKr_feval);
+fprintf('\n iKs and iKr model parameters have been scaled: \n');
+fprintf('\t gKs \t\t tauKs \t\t gKr \t\t tauXr1 \t tauXr2   \n');
+fprintf('\t %f \t %f \t %f \t %f \t %f \n\n', iKs_solution(1), iKs_solution(2), iKr_solution(1), iKr_solution(2), iKr_solution(3));
+newline;
+fprintf('\t iKs fitness = %f \n', iKs_feval);
+fprintf('\t iKr fitness = %f \n \n', iKr_feval);
 
 %% Stage 2: Fit to action potential
 
@@ -166,7 +169,7 @@ experimental_parameters = [-65.0    ... % Baseline voltage
                            232.7    ... % APD50
                             25.9];      % Rise time
 
-AP_fitness = @(current_scaling_factors) AP_setup(current_scaling_factors,experimental_parameters);
+AP_fitness = @(current_scaling_factors) AP_setup(current_scaling_factors,experimental_parameters, iKr_solution, iKs_solution);
 
 
 % Set lower and upper bounds for the particle swarm. You can choose these,
@@ -197,7 +200,7 @@ options = optimoptions(@particleswarm,'InitialSwarmMatrix',initial_swarm,'PlotFc
 
 % Run the particle swarm. Each iteration of the particle swarm will be
 % noted down in fitness.txt
-disp('Optimising for remaining current model parameters...');
+fprintf('Optimising for remaining current model parameters...');
 
 fileid = fopen('fitness.txt','a');
 fprintf(fileid, '==========================================================================');
@@ -206,16 +209,16 @@ fprintf(fileid, 'Optimisation results for fitting Paci model to action potential
 fprintf(fileid, '-------------------------------------------------------------------------- \n');
 fclose(fileid);
 
-[currents_solution,currents_feval] = particleswarm(@Fitness_Paci,10,current_LB,current_UB,options);
+[currents_solution,currents_feval] = particleswarm(AP_fitness,10,current_LB,current_UB,options);
 
-disp('\n Remaining current model parameters have been scaled: \n');
-disp('\t Na      CaL     K1      f       NaK     NaCa    to      PCa     bNa     bCa     \n')
-disp('\t %f      %f      %f      %f      %f      %f      %f      %f      %f      %f      \n \n', ...
+fprintf('\n Remaining current model parameters have been scaled: \n');
+fprintf('\t Na \t\t CaL \t\t K1 \t\t f \t\t NaK \t\t NaCa \t\t to \t\t PCa \t\t bNa \t\t bCa     \n')
+fprintf('\t %f \t %f \t %f \t %f \t %f \t %f \t %f \t %f \t %f \t %f      \n \n', ...
     currents_solution(1), currents_solution(2), currents_solution(3), currents_solution(4), ...
     currents_solution(5), currents_solution(6), currents_solution(7), currents_solution(8), ...
     currents_solution(9), currents_solution(10))
-disp('Currents fitness = %f \n', currents_feval);
-disp('================ \n');
-disp('Fitting complete \n');
-disp('================');
+fprintf('Currents fitness = %f \n', currents_feval);
+fprintf('================ \n');
+fprintf('Fitting complete \n');
+fprintf('================');
 

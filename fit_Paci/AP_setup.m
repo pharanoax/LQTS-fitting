@@ -1,4 +1,4 @@
-function fitness = AP_setup(current_scaling_factors, experimental_parameters)
+function fitness = AP_setup(current_scaling_factors, experimental_parameters, iKr_parameters, iKs_parameters)
 
 % This objective function will evaluate the fitness of how well the Paci
 % model fits to experimental action potential recordings of iPSC-CMs.
@@ -23,9 +23,13 @@ function fitness = AP_setup(current_scaling_factors, experimental_parameters)
 %   3   G_Kr     Kr maximal conductance              CONSTANTS(:,32)
 %   4   G_Ks     Ks maximal conductance              CONSTANTS(:,35)
 %   5   G_K1     K1 maximal conductance              CONSTANTS(:,36)   
-%   6   G_f      If maximal conductance              CONSTANTS(:,37)
+%   6   G_f      If current maximal conductance      CONSTANTS(:,37)
 %   7   P_NaK    NaK maximal conductance             CONSTANTS(:,43)                                        
 %   8   k_NaCa   NaCa maximal conductance            CONSTANTS(:,44)
+%   9   G_to     to maximal conductance              CONSTANTS(:,52)
+%   10  G_PCa    PCa maximal conductance             CONSTANTS(:,50)
+%   11  G_bNa    bNa maximal conductance             CONSTANTS(:,39)
+%   12  G_bCa    bCa maximal conductance             CONSTANTS(:,40)
 %
 % The expt_param scalar array input should be in the following format:
 %   #  Parameter         Description
@@ -37,7 +41,7 @@ function fitness = AP_setup(current_scaling_factors, experimental_parameters)
 %   5   RR interval      time duration between consecutive peaks
 
 % Run the Paci model with a set of the specified conductance scalings
-[VOI, STATES, ~, ~] = Paci_mod(current_scaling_factors);        
+[VOI, STATES, ~, ~] = Paci_mod(current_scaling_factors, iKr_parameters, iKs_parameters);        
 Paci_V = STATES(:,1)*1000;  
 
  % Select one action potential
