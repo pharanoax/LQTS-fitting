@@ -183,20 +183,20 @@ current_UB = [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0];
 % comment out this section if you want to start anew and uncomment the
 % following line of code:
 
-% options = optimoptions('particleswarm','PlotFcns',@pswplotbestf);
+options = optimoptions('particleswarm','PlotFcns',@pswplotbestf);
 
-initial_swarm = zeros(20,10);
-initial_swarm(:,1)  = 0.9389;   % Na
-initial_swarm(:,2)  = 2.4000;   % CaL
-initial_swarm(:,3)  = 1.5779;   % K1
-initial_swarm(:,4)  = 1.0000;   % f
-initial_swarm(:,5)  = 0.2036;   % NaK
-initial_swarm(:,6)  = 1.4999;   % NaCa
-initial_swarm(:,7)  = 0.9771;   % to
-initial_swarm(:,8)  = 0.5991;   % PCa
-initial_swarm(:,9)  = 1.3415;   % bNa
-initial_swarm(:,10) = 1.4990;   % bCa
-options = optimoptions(@particleswarm,'InitialSwarmMatrix',initial_swarm,'PlotFcns',@pswplotbestf);
+% initial_swarm = zeros(20,10);
+% initial_swarm(:,1)  = 0.9389;   % Na
+% initial_swarm(:,2)  = 2.4000;   % CaL
+% initial_swarm(:,3)  = 1.5779;   % K1
+% initial_swarm(:,4)  = 1.0000;   % f
+% initial_swarm(:,5)  = 0.2036;   % NaK
+% initial_swarm(:,6)  = 1.4999;   % NaCa
+% initial_swarm(:,7)  = 0.9771;   % to
+% initial_swarm(:,8)  = 0.5991;   % PCa
+% initial_swarm(:,9)  = 1.3415;   % bNa
+% initial_swarm(:,10) = 1.4990;   % bCa
+% options = optimoptions(@particleswarm,'InitialSwarmMatrix',initial_swarm,'PlotFcns',@pswplotbestf);
 
 % Run the particle swarm. Each iteration of the particle swarm will be
 % noted down in fitness.txt
