@@ -37,64 +37,17 @@ FinalAP_t = t(locs_mins(APend-1):locs_mins(APend));
 [p_V, Final_p_i] = max(FinalAP_V);
 APD50 = APD(FinalAP_V,FinalAP_t,b_V,p_V,Final_p_i); % Call the APD50 function
 
-% Identify the final peak position with respect to all the data - for rise
-% time code
-pk_i = locs_pks(length(pks));
-if pk_i>locs_mins(APend)
-    pk_i = locs_pks(length(pks)-1);
-end
+% Rise Time
+V10 = b_V + 0.1*(p_V-b_V);
+V90 = b_V + 0.9*(p_V-b_V);
 
-% Determine the rise index
-    % Determine time index for time of peak voltage minus APD50
-%     rise_band_start_t = t(length(locs_pks)) - APD50;
-%     [~, rise_band_start_i] = min(abs(t(1:locs_pks)-rise_band_start_t));
-    %rise_band_start_t =t(locs_mins(APend-1);
-    rise_band_start_i = locs_mins(APend-1);
-    
-    % Select data points that lie within the defined rise band
-    rise_band = rise_band_start_i:pk_i;
-    rise_AP = V(rise_band);
+[~, V10_i] = min(abs(FinalAP_V(1:Final_p_i)-V10));
+[~, V90_i] = min(abs(FinalAP_V(1:Final_p_i)-V90));
 
-    % Connect a straight line between the starting voltage and end voltage 
-    % of the rise band
-    m = ( V(pk_i) - V(rise_band_start_i) ) / (t(pk_i) - t(rise_band_start_i)) ; 
-    line = V(rise_band_start_i) + m*(t(rise_band)-t(rise_band_start_i)) ; 
-
-    % Determine the time point at which the perpendicular distance between
-    % the linear line and the action potential is at its greatest.
-    
-    max_distance = 0;
-
-    for i = rise_band_start_i:pk_i
-        
-        % Calculate the perpendicular at the current time point
-        orthonormal = line(i+1-rise_band_start_i) - (t(rise_band)-t(rise_band_start_i))/m;
-        
-        % Determine point of intersection with the action potential
-        [~, idx_AP_int] = min(abs(orthonormal-rise_AP));
-        idx_AP_int = idx_AP_int - 1 + rise_band_start_i;
-        V_AP_int = V(idx_AP_int);
-        int_AP = [t(idx_AP_int), V_AP_int];
-        
-        % Determine the point of intersection with the straight line        
-        [~, idx_line_int] = min(abs(orthonormal-line));
-        idx_line_int = idx_line_int - 1 + rise_band_start_i;
-        V_line_int = line(idx_line_int+1-rise_band_start_i);
-        int_line = [t(idx_line_int), V_line_int];
-        
-        % Determine the distance between the two intersections
-        distance = norm(int_AP-int_line);
-        
-        % Iteratively determine the time point at which maximum distance
-        % between the two intersections is achieved
-        if distance > max_distance
-            max_distance = distance;
-            rise_idx = i;
-        end        
-    end
+rise_time = t(V90_i) - t(V10_i);
 
 % Store the parameters
-rise_time = FinalAP_t(Final_p_i) - t(rise_idx);
+
 RR = t(locs_pks(APend)) - t(locs_pks(APend-1));
 
 end

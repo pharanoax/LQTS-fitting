@@ -1,4 +1,4 @@
-function [ baseline_voltage,peak_voltage,APD,rise_time, RR_interval ] = SteadyStateParameters( ScalingFactors, iKr_parameters, iKs_parameters )
+function [ baseline_voltage,peak_voltage,APD,rise_time, RR_interval ] = SteadyStateParameters( ScalingFactors, iKr_parameters, iKs_parameters,initSTATES )
 
 % This function identifies the parameters required for the objective function
 % from a steady state action potential
@@ -15,7 +15,7 @@ function [ baseline_voltage,peak_voltage,APD,rise_time, RR_interval ] = SteadySt
 
 
 % Run the model till steady state has been reached
-[SS_VOI, SS_STATES] = SteadyState( 200, ScalingFactors, iKr_parameters, iKs_parameters ); % the initial guess is 200 seconds
+[SS_VOI, SS_STATES] = SteadyState_init( 200, ScalingFactors, iKr_parameters, iKs_parameters, initSTATES ); % the initial guess is 200 seconds
 
 SS_STATES(:,1) = SS_STATES(:,1)*1000; % Change volts to milivolts for membrane voltage
 % SS_VOI = SS_VOI*1000; % Change s to ms for time

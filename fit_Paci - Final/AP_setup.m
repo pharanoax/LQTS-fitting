@@ -46,10 +46,17 @@ fitness = -1; % This is arbitrary, but I know that I can't get negative values h
 try 
     % Run the Paci model with a set of the specified conductance scalings
     [VOI, STATES, ~, ~] = Paci_modSS(10, current_scaling_factors, iKr_parameters, iKs_parameters);
-    [Paci_start, Paci_end] = first_AP(STATES(:,1)*1000,0);
+    % [Paci_start, Paci_end] = first_AP(STATES(:,1)*1000,0);
     Paci_V = STATES(:,1)*1000; % Convert to mV
-    Paci_AP = Paci_V(Paci_start:Paci_end);
-    Paci_t = (VOI(Paci_start:Paci_end)-VOI(Paci_start))*1000;
+    Paci_t = VOI;
+    
+    % Find the parameters of interest
+    [ peak_voltage,baseline_voltage,APD,rise_time, RR_interval ] = Parameters( Paci_t, Paci_V );
+    model_parameters = [ baseline_voltage,peak_voltage,APD,rise_time, RR_interval ] ;
+    
+    % Assess fitness
+    fitness = (sum(((experimental_parameters - model_parameters)./experimental_parameters).^2))^0.5;
+
 
 catch
     % Set fitness score to 1000 when the algorithm generates a
@@ -57,26 +64,7 @@ catch
     % when single_AP.m runs into trouble.
     
     fitness = 1000;
-end
-
-if fitness ~=1000
-    
-    try
-        % Run the Paci model with a set of the specified conductance scalings
-        [ baseline_voltage,peak_voltage,APD,rise_time, RR_interval ] = SteadyStateParameters(current_scaling_factors, iKr_parameters, iKs_parameters);
-        
-        % Find the parameters of interest
-        model_parameters = [ baseline_voltage,peak_voltage,APD,rise_time, RR_interval ] ;
-        
-        % Assess fitness
-        fitness = (sum(((experimental_parameters - model_parameters)./experimental_parameters).^2))^0.5;
-    catch
-        fitness = 1000;
-    end
-    
-
-end
-    
+end 
 
 % Write to text file
 
